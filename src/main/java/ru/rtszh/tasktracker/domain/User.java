@@ -6,10 +6,13 @@ import lombok.*;
 import java.util.List;
 
 @Entity
+@Builder
 @Setter
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "users")
+//@Table(name = "user")
 public class User {
 
     @Id
@@ -17,7 +20,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "login")
+//    @Column(name = "login")
+    @Column(name = "login", unique = true)
     private String login;
 
     @OneToMany(cascade = CascadeType.REMOVE,
