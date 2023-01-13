@@ -1,0 +1,6 @@
+app-kafka:
+  topicName: gateway.request
+  partitions: 1
+  replicas: 1
+
+
