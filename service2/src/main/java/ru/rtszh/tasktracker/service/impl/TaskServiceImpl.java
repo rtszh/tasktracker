@@ -7,7 +7,6 @@ import ru.rtszh.tasktracker.domain.User;
 import ru.rtszh.tasktracker.dto.TaskDto;
 import ru.rtszh.tasktracker.exceptions.UnknownTaskException;
 import ru.rtszh.tasktracker.exceptions.UnknownUserException;
-import ru.rtszh.tasktracker.factories.TaskDtoFactory;
 import ru.rtszh.tasktracker.repository.TaskRepository;
 import ru.rtszh.tasktracker.repository.UserRepository;
 import ru.rtszh.tasktracker.service.TaskService;
@@ -17,7 +16,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import static ru.rtszh.tasktracker.factories.TaskDtoFactory.*;
+import static ru.rtszh.tasktracker.factories.TaskDtoFactory.createTaskDtoFromTaskAndUserLogin;
 
 @Service
 public class TaskServiceImpl implements TaskService {

@@ -21,6 +21,7 @@ public class KafkaMessageSender implements MessageSender {
         this.kafkaTemplate = kafkaTemplate;
         this.objectMapper = objectMapper;
     }
+
     @Override
     public <T> String sendMessage(T message) {
         String messageAsString;
