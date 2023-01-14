@@ -14,6 +14,9 @@ import ru.rtszh.tasktracker.service.TaskService;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
+
+import static ru.rtszh.tasktracker.factories.TaskDtoFactory.createTaskDtoFromTaskAndUserLogin;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -29,6 +32,17 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<Task> findAllTasks() {
         return taskRepository.findAll();
+    }
+
+    @Override
+    public List<TaskDto> findAllTasksByUser(String userLogin) {
+
+        List<Task> userTasks = taskRepository.getTasksByUserLogin(userLogin);
+
+        return userTasks.stream()
+                .map(task -> createTaskDtoFromTaskAndUserLogin(task, userLogin))
+                .collect(Collectors.toList());
+
     }
 
     @Override

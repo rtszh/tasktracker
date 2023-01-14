@@ -7,6 +7,7 @@ import ru.rtszh.tasktracker.domain.ActionType;
 
 @Builder
 public record Message(
+        @Nullable
         @JsonProperty("taskTitle")
         String title,
         @Nullable
