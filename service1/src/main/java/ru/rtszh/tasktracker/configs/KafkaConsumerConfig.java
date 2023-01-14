@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.KafkaListener;
-import ru.rtszh.tasktracker.dto.Message;
+import ru.rtszh.tasktracker.dto.messages.consuming.ReceivedMessage;
 import ru.rtszh.tasktracker.processors.MessageProcessor;
 
 @Configuration
@@ -24,18 +24,18 @@ public class KafkaConsumerConfig {
 
     @KafkaListener(groupId = DEFAULT_GROUP_ID, topics = DEFAULT_TOPIC)
     public void taskRequestListen(String msgAsString) {
-        Message message;
+        ReceivedMessage receivedMessage;
 
         try {
-            message = objectMapper.readValue(msgAsString, Message.class);
+            receivedMessage = objectMapper.readValue(msgAsString, ReceivedMessage.class);
         } catch (Exception ex) {
             log.error("can't parse message:{}", msgAsString, ex);
             throw new RuntimeException("can't parse message:" + msgAsString);
         }
 
-        log.info("message consumed {}", message);
+        log.info("message consumed {}", receivedMessage);
 
-        messageProcessor.process(message);
+        messageProcessor.process(receivedMessage);
     }
 
 

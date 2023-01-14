@@ -1,7 +1,7 @@
 package ru.rtszh.tasktracker.processors;
 
-import ru.rtszh.tasktracker.dto.Message;
+import ru.rtszh.tasktracker.dto.messages.consuming.ReceivedMessage;
 
 public interface MessageProcessor {
-    void process(Message message);
+    void process(ReceivedMessage receivedMessage);
 }
