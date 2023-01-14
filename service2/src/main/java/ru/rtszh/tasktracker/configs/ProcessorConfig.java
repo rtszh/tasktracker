@@ -9,6 +9,7 @@ import ru.rtszh.tasktracker.processors.MessageSender;
 import ru.rtszh.tasktracker.processors.impl.CreateTaskProcessor;
 import ru.rtszh.tasktracker.processors.impl.DeleteTaskProcessor;
 import ru.rtszh.tasktracker.processors.impl.GetTasksByUserProcessor;
+import ru.rtszh.tasktracker.processors.impl.UpdateTaskProcessor;
 import ru.rtszh.tasktracker.service.TaskService;
 
 import java.util.HashMap;
@@ -27,6 +28,10 @@ public class ProcessorConfig {
 
         messageActionMap.put(
                 CREATE_TASK, new CreateTaskProcessor(taskService)
+        );
+
+        messageActionMap.put(
+                UPDATE_TASK, new UpdateTaskProcessor(taskService)
         );
 
         messageActionMap.put(

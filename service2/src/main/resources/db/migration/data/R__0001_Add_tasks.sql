@@ -5,14 +5,14 @@ values ('qwerty2');
 INSERT INTO users (login)
 values ('qwerty3');
 
-INSERT INTO task (title, description, user_id)
-values ('task1', 'description1', 1);
-INSERT INTO task (title, description, user_id)
-values ('task2', 'description2', 3);
-INSERT INTO task (title, description, user_id)
-values ('task3', 'description3', 2);
-INSERT INTO task (title, description, user_id)
-values ('task4', 'description4', 2);
+INSERT INTO task (title, description, user_id, order_number)
+values ('task1', 'description1', 1, 0);
+INSERT INTO task (title, description, user_id, order_number)
+values ('task2', 'description2', 3, 0);
+INSERT INTO task (title, description, user_id, order_number)
+values ('task3', 'description3', 2, 0);
+INSERT INTO task (title, description, user_id, order_number)
+values ('task4', 'description4', 2, 0);
 
 
 -- insert into author (name)
