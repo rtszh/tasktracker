@@ -5,18 +5,24 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.rtszh.tasktracker.domain.Task;
 import ru.rtszh.tasktracker.domain.User;
 import ru.rtszh.tasktracker.dto.TaskDto;
+import ru.rtszh.tasktracker.dto.TaskToUpdateDto;
+import ru.rtszh.tasktracker.exceptions.OrderNumberNullException;
 import ru.rtszh.tasktracker.exceptions.UnknownTaskException;
 import ru.rtszh.tasktracker.exceptions.UnknownUserException;
 import ru.rtszh.tasktracker.repository.TaskRepository;
 import ru.rtszh.tasktracker.repository.UserRepository;
 import ru.rtszh.tasktracker.service.TaskService;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
 import static ru.rtszh.tasktracker.factories.TaskDtoFactory.createTaskDtoFromTaskAndUserLogin;
+import static ru.rtszh.tasktracker.factories.TaskDtoFactory.createTaskDtoFromTaskToUpdateDto;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -47,7 +53,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional
-    public Task addTask(TaskDto taskDto) {
+    public void addTask(TaskDto taskDto) {
 
         Task task = Task.builder()
                 .title(taskDto.title())
@@ -63,7 +69,24 @@ public class TaskServiceImpl implements TaskService {
                 addUserIfItNotExistsAndAddTask(taskDto.userLogin(), savedTask)
         );
 
-        return savedTask;
+    }
+
+    @Override
+    @Transactional
+    public void updateTask(TaskToUpdateDto taskToUpdateDto) {
+
+        checkOrderNumber(taskToUpdateDto.orderNumber());
+
+        var userLogin = taskToUpdateDto.userLogin();
+
+        List<Task> filteredTasks = taskRepository.getTasksByTitleAndUserLogin(userLogin, taskToUpdateDto.title());
+
+        if (filteredTasks.size() == 0) {
+            addTask(createTaskDtoFromTaskToUpdateDto(taskToUpdateDto));
+        } else {
+            updateTask(taskToUpdateDto, filteredTasks);
+        }
+
     }
 
     @Override
@@ -95,18 +118,76 @@ public class TaskServiceImpl implements TaskService {
     }
 
     private Consumer<User> addTaskToExistingUser(Task savedTask) {
-        return user ->
-                user.getTasks().add(savedTask);
+        return user -> {
+
+            List<Task> tasksWithSameTitle = taskRepository.getTasksByTitleAndUserId(user.getId(), savedTask.getTitle());
+
+            int orderNumber = getOrderNumberFromTasksWithSameTitle(tasksWithSameTitle);
+
+            savedTask.setOrderNumber(orderNumber);
+
+            user.getTasks().add(savedTask);
+        };
+    }
+
+    private int getOrderNumberFromTasksWithSameTitle(List<Task> tasks) {
+        if (tasks.size() == 0) {
+            return 0;
+        } else {
+            int maxOrderNumber = tasks.stream()
+                    .map(Task::getOrderNumber)
+                    .mapToInt(Integer::intValue)
+                    .max()
+                    .getAsInt();
+
+            return ++maxOrderNumber;
+        }
+
     }
 
     private Runnable addUserIfItNotExistsAndAddTask(String userLogin, Task savedTask) {
-        return () -> userRepository.save(
-                User.builder()
-                        .login(userLogin)
-                        .tasks(
-                                List.of(savedTask)
-                        )
-                        .build()
-        );
+        return () -> {
+            savedTask.setOrderNumber(0);
+
+            userRepository.save(
+                    User.builder()
+                            .login(userLogin)
+                            .tasks(
+                                    List.of(savedTask)
+                            )
+                            .build()
+            );
+        };
+    }
+
+    private void updateTask(TaskToUpdateDto taskDto, List<Task> filteredTasks) {
+
+        var sortedFilteredTasks = filteredTasks.stream()
+                .sorted(Comparator.comparing(Task::getOrderNumber))
+                .toList();
+
+        var taskToUpdate = sortedFilteredTasks.get(taskDto.orderNumber());
+
+        updateTitleForTask(taskToUpdate, taskDto.updatedTitle());
+        updateDescriptionForTask(taskToUpdate, taskDto.description());
+
+    }
+
+    private void updateTitleForTask(Task task, String updatedTitle) {
+        if (nonNull(updatedTitle)) {
+            task.setTitle(updatedTitle);
+        }
+    }
+
+    private void updateDescriptionForTask(Task task, String updatedDescription) {
+        if (nonNull(updatedDescription)) {
+            task.setDescription(updatedDescription);
+        }
+    }
+
+    private void checkOrderNumber(Integer orderNumber) {
+        if (isNull(orderNumber)) {
+            throw new OrderNumberNullException("Order number for task must not be null");
+        }
     }
 }

@@ -49,13 +49,12 @@ public class ApiController {
     @PostMapping("/tasks/add")
     public ResponseEntity<Task> addTask(@RequestBody TaskDto taskDto) {
 
-        var taskList = taskService.addTask(taskDto);
+        taskService.addTask(taskDto);
 
-        return ResponseEntity.ok(taskList);
+        return ResponseEntity.ok(null);
     }
 
     @PostMapping("/tasks/delete")
-//    @DeleteMapping("/tasks")
     public ResponseEntity<Object> deleteTask(@RequestBody TaskDto taskDto) {
 
         taskService.deleteTask(taskDto);

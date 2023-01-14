@@ -10,11 +10,18 @@ public record Message(
         @Nullable
         @JsonProperty("taskTitle")
         String title,
+
+        @Nullable
+        @JsonProperty("newTaskTitle")
+        String updatedTitle,
         @Nullable
         @JsonProperty("taskDescription")
         String description,
         @JsonProperty("userLogin")
         String userLogin,
+
+        @JsonProperty("taskOrderNumber")
+        Integer orderNumber,
         @JsonProperty("actionType")
         ActionType actionType) {
 }
