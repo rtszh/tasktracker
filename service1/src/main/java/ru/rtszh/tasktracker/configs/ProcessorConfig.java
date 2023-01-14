@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import ru.rtszh.tasktracker.domain.ActionType;
 import ru.rtszh.tasktracker.dto.Message;
-import ru.rtszh.tasktracker.dto.TaskDto;
 import ru.rtszh.tasktracker.processors.impl.ReceiveUserTasksProcessor;
 
 import java.util.HashMap;

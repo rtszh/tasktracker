@@ -1,15 +1,13 @@
 package ru.rtszh.tasktracker.service.impl;
 
 import org.springframework.stereotype.Service;
-import ru.rtszh.tasktracker.dto.Message;
 import ru.rtszh.tasktracker.dto.TaskDto;
 import ru.rtszh.tasktracker.processors.MessageSender;
 import ru.rtszh.tasktracker.service.TaskService;
 
-import java.util.List;
-
 import static ru.rtszh.tasktracker.domain.ActionType.*;
-import static ru.rtszh.tasktracker.factories.MessageFactory.*;
+import static ru.rtszh.tasktracker.factories.MessageFactory.createMessageFromTaskDto;
+import static ru.rtszh.tasktracker.factories.MessageFactory.createMessageFromUserLogin;
 
 @Service
 public class TaskServiceImpl implements TaskService {
