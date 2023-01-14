@@ -7,9 +7,9 @@ spring:
 
   jpa:
     generate-ddl: false
-#    hibernate:
-#      ddl-auto: none
-#      ddl-auto: create
+    #    hibernate:
+    #      ddl-auto: none
+    #      ddl-auto: create
 
     properties:
       hibernate:

@@ -9,12 +9,12 @@ import java.util.function.Consumer;
 import static ru.rtszh.tasktracker.factories.TaskDtoFactory.createTaskDtoFromMessage;
 
 @RequiredArgsConstructor
-public class CreateTaskProcessor implements Consumer<Message> {
+public class DeleteTaskProcessor implements Consumer<Message> {
 
     private final TaskService taskService;
 
     @Override
     public void accept(Message message) {
-        taskService.addTask(createTaskDtoFromMessage(message));
+        taskService.deleteTask(createTaskDtoFromMessage(message));
     }
 }

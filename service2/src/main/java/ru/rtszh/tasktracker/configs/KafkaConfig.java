@@ -8,7 +8,6 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.KafkaListener;
 import ru.rtszh.tasktracker.dto.Message;
 import ru.rtszh.tasktracker.processors.MessageProcessor;
-import ru.rtszh.tasktracker.dto.TaskDto;
 
 @Configuration
 @RequiredArgsConstructor

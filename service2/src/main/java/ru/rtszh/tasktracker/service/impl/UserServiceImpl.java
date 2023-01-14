@@ -6,6 +6,7 @@ import ru.rtszh.tasktracker.repository.UserRepository;
 import ru.rtszh.tasktracker.service.UserService;
 
 import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
 

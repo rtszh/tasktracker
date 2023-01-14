@@ -1,12 +1,18 @@
+INSERT INTO users (login)
+values ('qwerty1');
+INSERT INTO users (login)
+values ('qwerty2');
+INSERT INTO users (login)
+values ('qwerty3');
 
-INSERT INTO users (login) values ('qwerty1');
-INSERT INTO users (login) values ('qwerty2');
-INSERT INTO users (login) values ('qwerty3');
-
-INSERT INTO task (title, description, user_id) values ('task1', 'description1', 1);
-INSERT INTO task (title, description, user_id) values ('task2', 'description2', 3);
-INSERT INTO task (title, description, user_id) values ('task3', 'description3', 2);
-INSERT INTO task (title, description, user_id) values ('task4', 'description4', 2);
+INSERT INTO task (title, description, user_id)
+values ('task1', 'description1', 1);
+INSERT INTO task (title, description, user_id)
+values ('task2', 'description2', 3);
+INSERT INTO task (title, description, user_id)
+values ('task3', 'description3', 2);
+INSERT INTO task (title, description, user_id)
+values ('task4', 'description4', 2);
 
 
 -- insert into author (name)
