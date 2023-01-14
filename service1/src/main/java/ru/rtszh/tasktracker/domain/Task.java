@@ -1,5 +1,9 @@
 package ru.rtszh.tasktracker.domain;
 
-public record Task(String userLogin, String taskTitle, String taskDescription, String actionType) {
+import lombok.Builder;
+import org.springframework.lang.Nullable;
+
+@Builder
+public record Task(String userLogin, String taskTitle, @Nullable String taskDescription, ActionType actionType) {
 
 }
