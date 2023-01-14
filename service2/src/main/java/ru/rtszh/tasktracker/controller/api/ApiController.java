@@ -22,7 +22,7 @@ public class ApiController {
         this.taskService = taskService;
     }
 
-    @GetMapping ("/users")
+    @GetMapping("/users")
     public ResponseEntity<List<User>> findAllUsers() {
 
         var userList = userService.findAllUsers();
@@ -30,7 +30,7 @@ public class ApiController {
         return ResponseEntity.ok(userList);
     }
 
-    @GetMapping ("/users/{id}")
+    @GetMapping("/users/{id}")
     public ResponseEntity<User> findUserById(@PathVariable long id) {
 
         var user = userService.findUserById(id);
@@ -38,7 +38,7 @@ public class ApiController {
         return ResponseEntity.ok(user);
     }
 
-    @GetMapping ("/tasks")
+    @GetMapping("/tasks")
     public ResponseEntity<List<Task>> findAllTasks() {
 
         var taskList = taskService.findAllTasks();
@@ -46,7 +46,7 @@ public class ApiController {
         return ResponseEntity.ok(taskList);
     }
 
-    @PostMapping ("/tasks/add")
+    @PostMapping("/tasks/add")
     public ResponseEntity<Task> addTask(@RequestBody TaskDto taskDto) {
 
         var taskList = taskService.addTask(taskDto);

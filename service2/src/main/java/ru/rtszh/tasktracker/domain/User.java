@@ -20,7 +20,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-//    @Column(name = "login")
+    //    @Column(name = "login")
     @Column(name = "login", unique = true)
     private String login;
 
