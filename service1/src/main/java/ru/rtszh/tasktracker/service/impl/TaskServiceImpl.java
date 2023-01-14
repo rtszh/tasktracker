@@ -8,6 +8,9 @@ import ru.rtszh.tasktracker.service.TaskService;
 
 import java.util.List;
 
+import static ru.rtszh.tasktracker.domain.ActionType.*;
+import static ru.rtszh.tasktracker.factories.TaskDtoFactory.*;
+
 @Service
 public class TaskServiceImpl implements TaskService {
 
@@ -23,12 +26,12 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public String addTask(Task task) {
-        return messageSender.sendMessage(task);
+    public String createTask(TaskDto taskDto) {
+        return messageSender.sendMessage(createTaskFromTaskDto(taskDto, CREATE_TASK));
     }
 
     @Override
-    public void deleteTask(TaskDto taskDto) {
-
+    public String deleteTask(TaskDto taskDto) {
+        return messageSender.sendMessage(createTaskFromTaskDto(taskDto, DELETE_TASK));
     }
 }
