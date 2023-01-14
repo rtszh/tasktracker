@@ -1,13 +1,14 @@
 package ru.rtszh.tasktracker.service.impl;
 
 import org.springframework.stereotype.Service;
-import ru.rtszh.tasktracker.dto.TaskDto;
+import ru.rtszh.tasktracker.dto.TaskToCreateDto;
+import ru.rtszh.tasktracker.dto.TaskToDeleteDto;
+import ru.rtszh.tasktracker.dto.TaskToUpdateDto;
 import ru.rtszh.tasktracker.processors.MessageSender;
 import ru.rtszh.tasktracker.service.TaskService;
 
 import static ru.rtszh.tasktracker.domain.ActionType.*;
-import static ru.rtszh.tasktracker.factories.MessageFactory.createMessageFromTaskDto;
-import static ru.rtszh.tasktracker.factories.MessageFactory.createMessageFromUserLogin;
+import static ru.rtszh.tasktracker.factories.MessageFactory.*;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -25,12 +26,17 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public String createTask(TaskDto taskDto) {
-        return messageSender.sendMessage(createMessageFromTaskDto(taskDto, CREATE_TASK));
+    public String createTask(TaskToCreateDto taskToCreateDto) {
+        return messageSender.sendMessage(createMessageFromCreateTaskDto(taskToCreateDto, CREATE_TASK));
     }
 
     @Override
-    public String deleteTask(TaskDto taskDto) {
-        return messageSender.sendMessage(createMessageFromTaskDto(taskDto, DELETE_TASK));
+    public String updateTask(TaskToUpdateDto taskToUpdateDto) {
+        return messageSender.sendMessage(createMessageFromUpdateTaskDto(taskToUpdateDto, UPDATE_TASK));
+    }
+
+    @Override
+    public String deleteTask(TaskToDeleteDto taskToDeleteDto) {
+        return messageSender.sendMessage(createMessageFromDeleteTaskDto(taskToDeleteDto, DELETE_TASK));
     }
 }
