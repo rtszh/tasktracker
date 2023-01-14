@@ -2,7 +2,7 @@ package ru.rtszh.tasktracker.controller.api;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.rtszh.tasktracker.domain.Task;
+import ru.rtszh.tasktracker.dto.Message;
 import ru.rtszh.tasktracker.dto.TaskDto;
 import ru.rtszh.tasktracker.service.TaskService;
 
@@ -18,12 +18,12 @@ public class ApiController {
         this.taskService = taskService;
     }
 
-    @GetMapping ("/tasks")
-    public ResponseEntity<List<Task>> findAllTasks() {
+    @GetMapping ("/tasks/{userLogin}")
+    public ResponseEntity<String> findAllTasksByUser(@PathVariable String userLogin) {
 
-        var taskList = taskService.findAllTasks();
+        var message = taskService.findAllUserTasks(userLogin);
 
-        return ResponseEntity.ok(taskList);
+        return ResponseEntity.ok(message);
     }
 
     @PostMapping ("/tasks/add")

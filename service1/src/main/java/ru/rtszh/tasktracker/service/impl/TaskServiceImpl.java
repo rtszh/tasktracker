@@ -1,7 +1,7 @@
 package ru.rtszh.tasktracker.service.impl;
 
 import org.springframework.stereotype.Service;
-import ru.rtszh.tasktracker.domain.Task;
+import ru.rtszh.tasktracker.dto.Message;
 import ru.rtszh.tasktracker.dto.TaskDto;
 import ru.rtszh.tasktracker.processors.MessageSender;
 import ru.rtszh.tasktracker.service.TaskService;
@@ -9,7 +9,7 @@ import ru.rtszh.tasktracker.service.TaskService;
 import java.util.List;
 
 import static ru.rtszh.tasktracker.domain.ActionType.*;
-import static ru.rtszh.tasktracker.factories.TaskDtoFactory.*;
+import static ru.rtszh.tasktracker.factories.MessageFactory.*;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -21,17 +21,18 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<Task> findAllTasks() {
-        return null;
+    public String findAllUserTasks(String userLogin) {
+
+        return messageSender.sendMessage(createMessageFromUserLogin(userLogin, GET_USER_TASKS));
     }
 
     @Override
     public String createTask(TaskDto taskDto) {
-        return messageSender.sendMessage(createTaskFromTaskDto(taskDto, CREATE_TASK));
+        return messageSender.sendMessage(createMessageFromTaskDto(taskDto, CREATE_TASK));
     }
 
     @Override
     public String deleteTask(TaskDto taskDto) {
-        return messageSender.sendMessage(createTaskFromTaskDto(taskDto, DELETE_TASK));
+        return messageSender.sendMessage(createMessageFromTaskDto(taskDto, DELETE_TASK));
     }
 }

@@ -13,14 +13,14 @@ import ru.rtszh.tasktracker.processors.MessageProcessor;
 @RequiredArgsConstructor
 @Slf4j
 @EnableKafka
-public class KafkaConfig {
+public class KafkaConsumerConfig {
 
     private final ObjectMapper objectMapper;
 
     private final MessageProcessor messageProcessor;
 
-    private static final String DEFAULT_GROUP_ID = "taskManager";
-    private static final String DEFAULT_TOPIC = "gateway.request";
+    private static final String DEFAULT_GROUP_ID = "gateway";
+    private static final String DEFAULT_TOPIC = "taskManager.request";
 
     @KafkaListener(groupId = DEFAULT_GROUP_ID, topics = DEFAULT_TOPIC)
     public void taskRequestListen(String msgAsString) {

@@ -1,3 +1,11 @@
+spring:
+  kafka:
+    template:
+      default-topic: taskManager.request
+    consumer:
+      group-id: gateway
+      bootstrap-servers: localhost:9092
+
 app-kafka:
   topicName: gateway.request
   partitions: 1
