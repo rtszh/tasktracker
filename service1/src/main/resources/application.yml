@@ -3,12 +3,10 @@ spring:
     template:
       default-topic: taskManager.request
     consumer:
-      group-id: gateway
+      group-id: gatewayConsumer
       bootstrap-servers: localhost:9092
 
 app-kafka:
   topicName: gateway.request
   partitions: 1
   replicas: 1
-
-
