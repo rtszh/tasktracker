@@ -19,10 +19,7 @@ public class KafkaConsumerConfig {
 
     private final MessageProcessor messageProcessor;
 
-    private static final String DEFAULT_GROUP_ID = "gateway";
-    private static final String DEFAULT_TOPIC = "taskManager.request";
-
-    @KafkaListener(groupId = DEFAULT_GROUP_ID, topics = DEFAULT_TOPIC)
+    @KafkaListener(groupId = "#{'${spring.kafka.consumer.group-id}'}", topics = "#{'${spring.kafka.template.default-topic}'}")
     public void taskRequestListen(String msgAsString) {
         ReceivedMessage receivedMessage;
 
@@ -37,6 +34,5 @@ public class KafkaConsumerConfig {
 
         messageProcessor.process(receivedMessage);
     }
-
 
 }
