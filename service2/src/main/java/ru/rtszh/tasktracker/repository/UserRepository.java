@@ -6,5 +6,6 @@ import ru.rtszh.tasktracker.domain.User;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findUserByLogin(String login);
+    //    Optional<User> findUserByLogin(String login);
+    Optional<User> findUserByChatId(String chatId);
 }

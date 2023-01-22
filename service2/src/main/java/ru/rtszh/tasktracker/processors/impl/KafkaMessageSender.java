@@ -42,5 +42,4 @@ public class KafkaMessageSender implements MessageSender {
         return "message sent: " + messageAsString;
     }
 
-
 }

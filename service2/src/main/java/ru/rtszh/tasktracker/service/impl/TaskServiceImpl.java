@@ -1,14 +1,18 @@
 package ru.rtszh.tasktracker.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.rtszh.tasktracker.domain.Task;
 import ru.rtszh.tasktracker.domain.User;
+import ru.rtszh.tasktracker.dto.DtoToCreateTask;
+import ru.rtszh.tasktracker.dto.DtoToDeleteTask;
 import ru.rtszh.tasktracker.dto.TaskDto;
 import ru.rtszh.tasktracker.dto.TaskToUpdateDto;
 import ru.rtszh.tasktracker.exceptions.OrderNumberNullException;
+import ru.rtszh.tasktracker.exceptions.UnknownChatException;
 import ru.rtszh.tasktracker.exceptions.UnknownTaskException;
-import ru.rtszh.tasktracker.exceptions.UnknownUserException;
+import ru.rtszh.tasktracker.factories.TaskDtoFactory;
 import ru.rtszh.tasktracker.repository.TaskRepository;
 import ru.rtszh.tasktracker.repository.UserRepository;
 import ru.rtszh.tasktracker.service.TaskService;
@@ -21,10 +25,9 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
-import static ru.rtszh.tasktracker.factories.TaskDtoFactory.createTaskDtoFromTaskAndUserLogin;
-import static ru.rtszh.tasktracker.factories.TaskDtoFactory.createTaskDtoFromTaskToUpdateDto;
 
 @Service
+@Slf4j
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
@@ -41,19 +44,19 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<TaskDto> findAllTasksByUser(String userLogin) {
+    public List<TaskDto> findAllTasksByUser(String chatId) {
 
-        List<Task> userTasks = taskRepository.getTasksByUserLogin(userLogin);
+        List<Task> userTasks = taskRepository.getTasksByChatId(chatId);
 
         return userTasks.stream()
-                .map(task -> createTaskDtoFromTaskAndUserLogin(task, userLogin))
+                .map(TaskDtoFactory::createDtoToCreateTask)
                 .collect(Collectors.toList());
 
     }
 
     @Override
     @Transactional
-    public void addTask(TaskDto taskDto) {
+    public void addTask(DtoToCreateTask taskDto) {
 
         Task task = Task.builder()
                 .title(taskDto.title())
@@ -62,12 +65,14 @@ public class TaskServiceImpl implements TaskService {
 
         var savedTask = taskRepository.save(task);
 
-        var userOptional = userRepository.findUserByLogin(taskDto.userLogin());
+        var userOptional = userRepository.findUserByChatId(taskDto.chatId());
 
         userOptional.ifPresentOrElse(
                 addTaskToExistingUser(savedTask),
-                addUserIfItNotExistsAndAddTask(taskDto.userLogin(), savedTask)
+                addUserIfItNotExistsAndAddTask(taskDto.chatId(), savedTask)
         );
+
+        log.info("Task added successfully: {}", savedTask);
 
     }
 
@@ -82,7 +87,7 @@ public class TaskServiceImpl implements TaskService {
         List<Task> filteredTasks = taskRepository.getTasksByTitleAndUserLogin(userLogin, taskToUpdateDto.title());
 
         if (filteredTasks.size() == 0) {
-            addTask(createTaskDtoFromTaskToUpdateDto(taskToUpdateDto));
+//            addTask(createTaskDtoFromTaskToUpdateDto(taskToUpdateDto));
         } else {
             updateTask(taskToUpdateDto, filteredTasks);
         }
@@ -91,25 +96,25 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional
-    public void deleteTask(TaskDto taskDto) {
+    public void deleteTask(DtoToDeleteTask taskDto) {
+        Optional<User> optionalUser = userRepository.findUserByChatId(taskDto.chatId());
 
-        Optional<User> optionalUser = userRepository.findUserByLogin(taskDto.userLogin());
-
-        User foundedUser = optionalUser.orElseThrow(() -> new UnknownUserException(
-                        String.format("User '%s' not found", taskDto.userLogin())
+        User foundedUser = optionalUser.orElseThrow(() -> new UnknownChatException(
+                        String.format("User with chatId '%s' not found", taskDto.chatId())
                 )
         );
 
         List<Task> tasks = foundedUser.getTasks();
 
-        var taskToDelete = getTaskToDelete(tasks, taskDto.title());
+        var taskToDelete = getTaskToDelete(tasks, taskDto.title(), taskDto.orderNumber());
 
         taskRepository.delete(taskToDelete);
     }
 
-    private Task getTaskToDelete(List<Task> tasks, String taskTitleToDelete) {
+    private Task getTaskToDelete(List<Task> tasks, String taskTitleToDelete, Integer orderNumber) {
         return tasks.stream()
                 .filter(task -> task.getTitle().equals(taskTitleToDelete))
+                .filter(task -> task.getOrderNumber().equals(orderNumber))
                 .findFirst()
                 .orElseThrow(() -> new UnknownTaskException(
                                 String.format("Task %s doesn't exist", taskTitleToDelete)
@@ -145,13 +150,13 @@ public class TaskServiceImpl implements TaskService {
 
     }
 
-    private Runnable addUserIfItNotExistsAndAddTask(String userLogin, Task savedTask) {
+    private Runnable addUserIfItNotExistsAndAddTask(String chatId, Task savedTask) {
         return () -> {
             savedTask.setOrderNumber(0);
 
             userRepository.save(
                     User.builder()
-                            .login(userLogin)
+                            .chatId(chatId)
                             .tasks(
                                     List.of(savedTask)
                             )
