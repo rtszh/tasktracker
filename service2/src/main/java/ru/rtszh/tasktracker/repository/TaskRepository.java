@@ -10,17 +10,17 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Query(value = "SELECT id, title, description FROM task WHERE user_id = :userId", nativeQuery = true)
     List<Task> getTasksByUserId(long userId);
 
-    @Query(value = "SELECT task.id, task.title, task.description " +
+    @Query(value = "SELECT task.id, task.title, task.description, task.order_number " +
             "FROM task " +
             "LEFT JOIN users ON users.id = task.user_id  " +
-            "WHERE users.login = :userLogin", nativeQuery = true)
-    List<Task> getTasksByUserLogin(String userLogin);
+            "WHERE users.chat_id = :chatId", nativeQuery = true)
+    List<Task> getTasksByChatId(String chatId);
 
     @Query(value = "SELECT task.id, task.title, task.description, task.order_number " +
             "FROM task " +
             "LEFT JOIN users ON users.id = task.user_id  " +
-            "WHERE users.login = :userLogin AND task.title = :taskTitle", nativeQuery = true)
-    List<Task> getTasksByTitleAndUserLogin(String userLogin, String taskTitle);
+            "WHERE users.chat_id = :chatId AND task.title = :taskTitle", nativeQuery = true)
+    List<Task> getTasksByTitleAndUserLogin(String chatId, String taskTitle);
 
     @Query(value = "SELECT task.id, task.title, task.description, task.order_number " +
             "FROM task " +

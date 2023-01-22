@@ -21,8 +21,8 @@ public class User {
     private long id;
 
     //    @Column(name = "login")
-    @Column(name = "login", unique = true)
-    private String login;
+    @Column(name = "chat_id", unique = true)
+    private String chatId;
 
     @OneToMany(cascade = CascadeType.REMOVE,
             orphanRemoval = true,

@@ -6,8 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.KafkaListener;
-import ru.rtszh.tasktracker.dto.Message;
 import ru.rtszh.tasktracker.processors.MessageProcessor;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Configuration
 @RequiredArgsConstructor
@@ -19,21 +21,17 @@ public class KafkaConsumerConfig {
 
     private final MessageProcessor messageProcessor;
 
+    private final ExecutorService executorService = Executors.newFixedThreadPool(1);
+
 
     @KafkaListener(groupId = "#{'${spring.kafka.consumer.group-id}'}", topics = "#{'${spring.kafka.template.default-topic}'}")
     public void taskRequestListen(String msgAsString) {
-        Message message;
+        log.info("message consumed {}", msgAsString);
 
-        try {
-            message = objectMapper.readValue(msgAsString, Message.class);
-        } catch (Exception ex) {
-            log.error("can't parse message:{}", msgAsString, ex);
-            throw new RuntimeException("can't parse message:" + msgAsString);
-        }
+        executorService.submit(
+                () -> messageProcessor.process(msgAsString)
+        );
 
-        log.info("message consumed {}", message);
-
-        messageProcessor.process(message);
     }
 
 }

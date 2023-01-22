@@ -1,8 +1,8 @@
-INSERT INTO users (login)
+INSERT INTO users (chat_id)
 values ('qwerty1');
-INSERT INTO users (login)
+INSERT INTO users (chat_id)
 values ('qwerty2');
-INSERT INTO users (login)
+INSERT INTO users (chat_id)
 values ('qwerty3');
 
 INSERT INTO task (title, description, user_id, order_number)
