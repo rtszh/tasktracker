@@ -1,28 +1,44 @@
 package ru.rtszh.tasktracker.processors.impl;
 
 import org.springframework.stereotype.Component;
-import ru.rtszh.tasktracker.domain.ActionType;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import ru.rtszh.tasktracker.dto.messages.consuming.ReceivedMessage;
 import ru.rtszh.tasktracker.processors.MessageProcessor;
+import ru.rtszh.tasktracker.processors.TextFormatProcessor;
+import ru.rtszh.tasktracker.telegramclient.events.SendMessageEventPublisher;
 
-import java.util.Map;
-import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 @Component
 public class MessageProcessorImpl implements MessageProcessor {
 
-    private final Map<ActionType, Consumer<ReceivedMessage>> messageActionMap;
+    private final SendMessageEventPublisher sendMessageEventPublisher;
+    private final TextFormatProcessor textFormatProcessor;
 
-    public MessageProcessorImpl(Map<ActionType, Consumer<ReceivedMessage>> actionMap) {
-        this.messageActionMap = actionMap;
+    public MessageProcessorImpl(SendMessageEventPublisher sendMessageEventPublisher,
+                                TextFormatProcessor textFormatProcessor) {
+        this.sendMessageEventPublisher = sendMessageEventPublisher;
+        this.textFormatProcessor = textFormatProcessor;
     }
 
     @Override
     public void process(ReceivedMessage receivedMessage) {
-        var actionType = receivedMessage.actionType();
 
-        var handler = messageActionMap.get(actionType);
+        SendMessage sendMessage = createMessage(receivedMessage);
 
-        handler.accept(receivedMessage);
+        sendMessageEventPublisher.publishSendMessageEvent(sendMessage);
+
+    }
+
+    private SendMessage createMessage(ReceivedMessage receivedMessage) {
+        SendMessage sendMessage = new SendMessage();
+
+        sendMessage.setChatId(receivedMessage.chatId());
+
+        String text = textFormatProcessor.getTextToSend(receivedMessage.taskDtoList());
+
+        sendMessage.setText(text);
+
+        return sendMessage;
     }
 }

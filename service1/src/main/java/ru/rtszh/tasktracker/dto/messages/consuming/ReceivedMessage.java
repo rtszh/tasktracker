@@ -1,21 +1,20 @@
 package ru.rtszh.tasktracker.dto.messages.consuming;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
-import ru.rtszh.tasktracker.domain.ActionType;
+import ru.rtszh.tasktracker.dto.TaskDto;
+
+import java.util.List;
 
 @Builder
 public record ReceivedMessage(
         @NonNull
-        String userLogin,
-        @Nullable
-        String taskTitle,
-        @Nullable
-        String taskDescription,
-        @Nullable
-        String newTaskTitle,
+        @JsonProperty("chatId")
+        String chatId,
+
         @NonNull
-        ActionType actionType) {
+        @JsonProperty("tasks")
+        List<TaskDto> taskDtoList) {
 
 }

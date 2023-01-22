@@ -5,6 +5,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.TopicBuilder;
+import ru.rtszh.tasktracker.properties.KafkaProperties;
 
 @Configuration
 @EnableConfigurationProperties(KafkaProperties.class)

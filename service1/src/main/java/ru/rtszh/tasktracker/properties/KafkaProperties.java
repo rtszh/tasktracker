@@ -1,4 +1,4 @@
-package ru.rtszh.tasktracker.configs;
+package ru.rtszh.tasktracker.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
