@@ -8,8 +8,6 @@ import ru.rtszh.tasktracker.domain.User;
 import ru.rtszh.tasktracker.dto.DtoToCreateTask;
 import ru.rtszh.tasktracker.dto.DtoToDeleteTask;
 import ru.rtszh.tasktracker.dto.TaskDto;
-import ru.rtszh.tasktracker.dto.TaskToUpdateDto;
-import ru.rtszh.tasktracker.exceptions.OrderNumberNullException;
 import ru.rtszh.tasktracker.exceptions.UnknownChatException;
 import ru.rtszh.tasktracker.exceptions.UnknownTaskException;
 import ru.rtszh.tasktracker.factories.TaskDtoFactory;
@@ -17,14 +15,12 @@ import ru.rtszh.tasktracker.repository.TaskRepository;
 import ru.rtszh.tasktracker.repository.UserRepository;
 import ru.rtszh.tasktracker.service.TaskService;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import static java.util.Objects.isNull;
-import static java.util.Objects.nonNull;
+import static ru.rtszh.tasktracker.factories.TaskDtoFactory.createDtoToCreateTask;
 
 @Service
 @Slf4j
@@ -36,11 +32,6 @@ public class TaskServiceImpl implements TaskService {
     public TaskServiceImpl(TaskRepository taskRepository, UserRepository userRepository) {
         this.taskRepository = taskRepository;
         this.userRepository = userRepository;
-    }
-
-    @Override
-    public List<Task> findAllTasks() {
-        return taskRepository.findAll();
     }
 
     @Override
@@ -73,24 +64,6 @@ public class TaskServiceImpl implements TaskService {
         );
 
         log.info("Task added successfully: {}", savedTask);
-
-    }
-
-    @Override
-    @Transactional
-    public void updateTask(TaskToUpdateDto taskToUpdateDto) {
-
-        checkOrderNumber(taskToUpdateDto.orderNumber());
-
-        var userLogin = taskToUpdateDto.userLogin();
-
-        List<Task> filteredTasks = taskRepository.getTasksByTitleAndUserLogin(userLogin, taskToUpdateDto.title());
-
-        if (filteredTasks.size() == 0) {
-//            addTask(createTaskDtoFromTaskToUpdateDto(taskToUpdateDto));
-        } else {
-            updateTask(taskToUpdateDto, filteredTasks);
-        }
 
     }
 
@@ -165,34 +138,4 @@ public class TaskServiceImpl implements TaskService {
         };
     }
 
-    private void updateTask(TaskToUpdateDto taskDto, List<Task> filteredTasks) {
-
-        var sortedFilteredTasks = filteredTasks.stream()
-                .sorted(Comparator.comparing(Task::getOrderNumber))
-                .toList();
-
-        var taskToUpdate = sortedFilteredTasks.get(taskDto.orderNumber());
-
-        updateTitleForTask(taskToUpdate, taskDto.updatedTitle());
-        updateDescriptionForTask(taskToUpdate, taskDto.description());
-
-    }
-
-    private void updateTitleForTask(Task task, String updatedTitle) {
-        if (nonNull(updatedTitle)) {
-            task.setTitle(updatedTitle);
-        }
-    }
-
-    private void updateDescriptionForTask(Task task, String updatedDescription) {
-        if (nonNull(updatedDescription)) {
-            task.setDescription(updatedDescription);
-        }
-    }
-
-    private void checkOrderNumber(Integer orderNumber) {
-        if (isNull(orderNumber)) {
-            throw new OrderNumberNullException("Order number for task must not be null");
-        }
-    }
 }
