@@ -17,8 +17,6 @@ import java.util.concurrent.Executors;
 @EnableKafka
 public class KafkaConsumerConfig {
 
-    private final ObjectMapper objectMapper;
-
     private final MessageProcessor messageProcessor;
 
     private final ExecutorService executorService = Executors.newFixedThreadPool(1);

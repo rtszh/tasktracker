@@ -1,7 +1,7 @@
 package ru.rtszh.tasktracker.processors.impl.actions;
 
 import org.springframework.stereotype.Component;
-import ru.rtszh.tasktracker.domain.ActionTypesWithWaiting;
+import ru.rtszh.tasktracker.model.ActionTypesWithWaiting;
 import ru.rtszh.tasktracker.dto.ConsumedMessage;
 import ru.rtszh.tasktracker.exceptions.InvalidRegexException;
 import ru.rtszh.tasktracker.factories.TaskDtoFactory;

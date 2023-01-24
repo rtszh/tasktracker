@@ -1,4 +1,4 @@
-package ru.rtszh.tasktracker.domain;
+package ru.rtszh.tasktracker.model;
 
 import lombok.Getter;
 

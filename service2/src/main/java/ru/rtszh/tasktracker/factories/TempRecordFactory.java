@@ -7,7 +7,6 @@ public class TempRecordFactory {
     public static TempRecord createTempRecord(Message message) {
         return TempRecord.builder()
                 .chatId(message.getChatId())
-//                .userId(message.getFrom().getId())
                 .unixDate(message.getDate())
                 .actionType(message.getText())
                 .build();

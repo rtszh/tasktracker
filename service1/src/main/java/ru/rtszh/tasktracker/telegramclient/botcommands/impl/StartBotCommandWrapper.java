@@ -6,7 +6,7 @@ import ru.rtszh.tasktracker.telegramclient.botcommands.BotCommandWrapper;
 @Component
 public class StartBotCommandWrapper extends BotCommandWrapper {
     private static final String COMMAND_NAME = "/start";
-    private static final String COMMAND_DESCRIPTION = "get a welcome message";
+    private static final String COMMAND_DESCRIPTION = "Get a welcome message";
 
 
     public StartBotCommandWrapper() {
