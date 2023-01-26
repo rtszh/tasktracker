@@ -19,7 +19,7 @@ public class KafkaConsumerConfig {
 
     private final MessageProcessor messageProcessor;
 
-    private final ExecutorService executorService = Executors.newFixedThreadPool(1);
+    private final ExecutorService executorService;
 
 
     @KafkaListener(groupId = "#{'${spring.kafka.consumer.group-id}'}", topics = "#{'${spring.kafka.template.default-topic}'}")

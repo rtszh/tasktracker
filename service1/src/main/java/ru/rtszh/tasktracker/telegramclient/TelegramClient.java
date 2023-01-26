@@ -11,7 +11,6 @@ import ru.rtszh.tasktracker.properties.TelegramBotProperties;
 import ru.rtszh.tasktracker.telegramclient.events.SendMessageEvent;
 
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @Component
 @Slf4j
@@ -20,11 +19,12 @@ public class TelegramClient extends TelegramLongPollingBot {
     private final MessageSender messageSender;
 
     //    ExecutorService executorService = Executors.newCachedThreadPool(Executors.defaultThreadFactory());
-    ExecutorService executorService = Executors.newFixedThreadPool(1);
+    ExecutorService executorService;
 
-    public TelegramClient(TelegramBotProperties botProperties, MessageSender messageSender) {
+    public TelegramClient(TelegramBotProperties botProperties, MessageSender messageSender, ExecutorService executorService) {
         this.botProperties = botProperties;
         this.messageSender = messageSender;
+        this.executorService = executorService;
     }
 
     @Override
