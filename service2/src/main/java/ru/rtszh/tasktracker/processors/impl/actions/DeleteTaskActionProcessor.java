@@ -26,11 +26,12 @@ public class DeleteTaskActionProcessor implements ActionTypeProcessor {
     private final MessageSender messageSender;
     private final TaskService taskService;
 
-    private final ExecutorService executorService = Executors.newFixedThreadPool(1);
+    private final ExecutorService executorService;
 
-    public DeleteTaskActionProcessor(MessageSender messageSender, TaskService taskService) {
+    public DeleteTaskActionProcessor(MessageSender messageSender, TaskService taskService, ExecutorService executorService) {
         this.messageSender = messageSender;
         this.taskService = taskService;
+        this.executorService = executorService;
     }
 
     @Override

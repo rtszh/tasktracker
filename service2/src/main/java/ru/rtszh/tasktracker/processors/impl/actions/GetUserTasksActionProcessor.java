@@ -15,11 +15,12 @@ import static ru.rtszh.tasktracker.factories.ProducedMessageFactory.createProduc
 public class GetUserTasksActionProcessor implements ActionTypeProcessor {
 
     private final MessageSender messageSender;
-    private final ExecutorService executorService = Executors.newFixedThreadPool(1);
+    private final ExecutorService executorService;
     private final TaskService taskService;
 
-    public GetUserTasksActionProcessor(MessageSender messageSender, TaskService taskService) {
+    public GetUserTasksActionProcessor(MessageSender messageSender, ExecutorService executorService, TaskService taskService) {
         this.messageSender = messageSender;
+        this.executorService = executorService;
         this.taskService = taskService;
     }
 
