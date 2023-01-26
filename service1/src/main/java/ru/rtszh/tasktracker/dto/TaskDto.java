@@ -26,9 +26,9 @@ public record TaskDto(
             }
         } else {
             if (orderNumber == 0) {
-                return String.format("%s, %s", title, description);
+                return String.format("%s: %s", title, description);
             } else {
-                return String.format("%s (%d), %s", title, (orderNumber + 1), description);
+                return String.format("%s (%d): %s", title, (orderNumber + 1), description);
             }
         }
 
