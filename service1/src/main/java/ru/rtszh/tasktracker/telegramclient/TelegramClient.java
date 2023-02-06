@@ -17,8 +17,6 @@ import java.util.concurrent.ExecutorService;
 public class TelegramClient extends TelegramLongPollingBot {
     private final TelegramBotProperties botProperties;
     private final MessageSender messageSender;
-
-    //    ExecutorService executorService = Executors.newCachedThreadPool(Executors.defaultThreadFactory());
     ExecutorService executorService;
 
     public TelegramClient(TelegramBotProperties botProperties, MessageSender messageSender, ExecutorService executorService) {

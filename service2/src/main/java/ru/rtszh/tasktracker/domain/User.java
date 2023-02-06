@@ -12,7 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
-//@Table(name = "user")
 public class User {
 
     @Id
@@ -20,7 +19,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    //    @Column(name = "login")
     @Column(name = "chat_id", unique = true)
     private String chatId;
 
